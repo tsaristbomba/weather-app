@@ -57,7 +57,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    latitude !== null && getMyCity();
+    latitude !== null && longitude !== null && getMyCity();
   }, [latitude, longitude]);
 
   useEffect(() => {
