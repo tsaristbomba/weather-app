@@ -57,11 +57,11 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    getMyCity();
+    latitude !== null && getMyCity();
   }, [latitude, longitude]);
 
   useEffect(() => {
-    getWeather();
+    id !== null && getWeather();
   }, [id]);
 
   useEffect(() => {
@@ -90,26 +90,23 @@ const Home = () => {
   }
   //MY GEOLOCATION END
 
-  async function getMyCity() {
+  function getMyCity() {
     try {
       setCity(null);
       setId(null);
       setWeather(null);
       setLoading(true);
 
-      latitude !== null &&
-        longitude !== null &&
-        (await axios
-          .get(
-            `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/search/?lattlong=${latitude},${longitude}`
-          )
-          .then((res) => {
-            //console.log(res.data[0]);
-            const data = res.data[0];
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/search/?lattlong=${latitude},${longitude}`
+        )
+        .then((res) => {
+          const data = res.data[0];
 
-            setCity(data.title);
-            setId(data.woeid);
-          }));
+          setCity(data.title);
+          setId(data.woeid);
+        });
 
       setLoading(false);
     } catch (err) {
@@ -118,14 +115,15 @@ const Home = () => {
     }
   }
 
-  async function getOtherCity(query) {
+  function getOtherCity(query) {
     try {
       setCity(null);
       setError(null);
       setId(null);
       setWeather(null);
       setLoading(true);
-      await axios
+
+      axios
         .get(
           `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/search/?query=${query}`
         )
@@ -145,18 +143,17 @@ const Home = () => {
     }
   }
 
-  async function getWeather() {
+  function getWeather() {
     try {
-      id !== null &&
-        (await axios
-          .get(
-            `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/${id}/`
-          )
-          .then((res) => {
-            const data = res.data.consolidated_weather;
+      axios
+        .get(
+          `https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/${id}/`
+        )
+        .then((res) => {
+          const data = res.data.consolidated_weather;
 
-            setWeather(data);
-          }));
+          setWeather(data);
+        });
     } catch (err) {
       console.log(err);
     }
